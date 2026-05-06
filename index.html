@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HIGGSFIELD VIDEO GENERATOR 1.0 &#9889;</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;background:#0f0f1a;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.container{max-width:760px;margin:0 auto;padding:32px 24px}
+h1{font-size:24px;font-weight:700;color:#f8fafc;margin-bottom:6px}
+h2{font-size:16px;font-weight:700;color:#f8fafc;margin-bottom:12px}
+.sub{font-size:13px;color:#94a3b8;margin-bottom:32px}
+.accent{color:#f97316}
+.sn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:#f97316;color:#fff;font-size:12px;font-weight:700;margin-right:8px}
+.sec{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:12px;padding:24px;margin-bottom:20px}
+label{display:block;font-size:12px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+input[type="text"],input[type="password"],textarea,select{width:100%;padding:10px 14px;border-radius:8px;border:1px solid #2a2a4a;background:#12121f;color:#e2e8f0;font-size:14px;font-family:inherit;transition:border-color .15s;margin-bottom:16px}
+input[type="text"]:focus,input[type="password"]:focus,textarea:focus,select:focus{outline:none;border-color:#f97316}
+textarea{resize:vertical;min-height:80px;line-height:1.5}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2394a3b8' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer}
+.row{display:flex;gap:12px}.row>*{flex:1}
+.hint{padding:10px 14px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);border-radius:8px;font-size:12px;color:#fdba74;margin-bottom:16px;line-height:1.5}
+.btn2{background:#1a1a2e;color:#94a3b8;border:1px solid #2a2a4a;width:100%;justify-content:center;padding:10px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center}
+.btn2:hover{border-color:#f97316;color:#e2e8f0}
+.btngen{width:100%;padding:14px;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:linear-gradient(135deg,#f97316,#fb923c);color:#fff;border:none;border-radius:10px;cursor:pointer;transition:all .2s}
+.btngen:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(249,115,22,.3)}
+.btnclaude{width:100%;padding:14px;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:10px;cursor:pointer;transition:all .2s}
+.btnclaude:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(34,197,94,.3)}
+.btnclaude:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* Upload zone */
+.upload-zone{border:2px dashed #2a2a4a;border-radius:10px;padding:24px;text-align:center;cursor:pointer;transition:all .15s;margin-bottom:16px}
+.upload-zone:hover{border-color:#f97316}
+.upload-zone.drag{border-color:#f97316;background:rgba(249,115,22,.08)}
+.upload-zone.has-img{border-style:solid;border-color:#22c55e;padding:12px}
+.upload-zone img{max-width:100%;max-height:200px;border-radius:6px}
+.upload-zone p{font-size:13px;color:#64748b;margin-top:8px}
+.upload-zone .up-label{font-size:14px;color:#94a3b8;font-weight:600}
+
+/* States */
+.sr{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.sr input{margin-bottom:0;flex:1}
+.sk{display:inline-block;padding:3px 8px;border-radius:4px;background:rgba(248,113,113,.1);color:#f87171;font-size:11px;font-weight:600;margin-right:6px}
+.rl{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:6px;border:1px solid #2a2a4a;background:transparent;color:#64748b;cursor:pointer;font-size:16px;flex-shrink:0}
+.rl:hover{border-color:#f87171;color:#f87171}
+
+/* Generator */
+.tabs{display:flex;margin-bottom:20px;border-radius:8px;overflow:hidden;border:1px solid #2a2a4a}
+.tab{flex:1;padding:10px 16px;border:none;cursor:pointer;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;transition:all .15s;background:#1a1a2e;color:#94a3b8}
+.tab.active{background:#f97316;color:#fff}
+.pills{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.pill{padding:6px 14px;border-radius:6px;border:1px solid #2a2a4a;background:#1a1a2e;color:#94a3b8;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.pill.active{border-color:#f87171;background:rgba(248,113,113,.12);color:#f87171}
+.cards{display:flex;flex-direction:column;gap:10px}
+.card{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:10px;padding:14px 18px;cursor:pointer;transition:all .2s}
+.card:hover{border-color:#f97316}
+.card.cp{background:#0d2818;border-color:#22c55e}
+.card.done{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.35)}
+.card.done .cs{color:#22c55e}
+.card.done .cl{color:#fdba74}
+.cts{font-size:11px;color:#22c55e;margin-top:6px;font-weight:500;letter-spacing:.02em}
+.cfull{margin-top:10px;padding:12px 14px;background:#0a0a14;border:1px solid #2a2a4a;border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#cbd5e1;white-space:pre-wrap;word-break:break-word;line-height:1.5;max-height:320px;overflow-y:auto}
+.prev-toggle{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:6px;border:1px solid #2a2a4a;background:#1a1a2e;color:#94a3b8;cursor:pointer;font-size:12px;font-weight:600}
+.prev-toggle:hover{border-color:#f97316;color:#e2e8f0}
+.prev-toggle.on{border-color:#f97316;background:rgba(249,115,22,.1);color:#fdba74}
+.mode-toggle{display:inline-flex;border:1px solid #2a2a4a;border-radius:6px;overflow:hidden;background:#12121f}
+.mtab{padding:6px 14px;background:transparent;border:none;color:#94a3b8;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:.04em}
+.mtab.active{background:#f97316;color:#fff}
+.mtab:hover:not(.active){color:#e2e8f0}
+.ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.cl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#f97316}
+.cs{font-size:11px;font-weight:600;color:#64748b}
+.card.cp .cs{color:#22c55e}
+.ct{font-size:14px;line-height:1.5;color:#e2e8f0}
+.swap{color:#f87171;font-weight:700;background:rgba(248,113,113,.1);border-radius:3px;padding:1px 3px}
+.gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+.btnback{background:#1a1a2e;color:#94a3b8;border:1px solid #2a2a4a;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+.btnback:hover{border-color:#f97316;color:#e2e8f0}
+
+/* Line chips in the parsed preview */
+.parsed-lines{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.pl{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;background:#12121f;border-radius:6px;border:1px solid #2a2a4a;font-size:13px;line-height:1.4}
+.pl-n{min-width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:#2a2a4a;border-radius:5px;font-size:10px;font-weight:700;color:#94a3b8;flex-shrink:0}
+.pl-t{flex:1;color:#e2e8f0}
+.pl-tag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;flex-shrink:0;border:1px solid #2a2a4a;background:#1a1a2e;color:#94a3b8;transition:all .15s}
+.pl-tag.st{border-color:#f87171;background:rgba(248,113,113,.12);color:#f87171}
+
+/* Welcome / Signin */
+.welcome-wrap{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 64px)}
+.welcome-card{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:12px;padding:32px;max-width:480px;width:100%}
+.welcome-card h1{margin-bottom:12px}
+.welcome-card p{font-size:13px;color:#94a3b8;margin-bottom:20px;line-height:1.5}
+
+/* Jobs dashboard */
+.jh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;gap:16px;flex-wrap:wrap}
+.jh-left h1{margin-bottom:4px}
+.jh-user{font-size:13px;color:#94a3b8;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.jh-user b{color:#e2e8f0}
+.icon-btn{width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;border:1px solid #2a2a4a;background:#12121f;color:#64748b;cursor:pointer;font-size:12px;padding:0}
+.icon-btn:hover{border-color:#f97316;color:#e2e8f0}
+.chip-btn{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;border:1px solid #2a2a4a;background:#12121f;color:#94a3b8;cursor:pointer;font-size:12px;font-weight:600}
+.chip-btn:hover{border-color:#f97316;color:#e2e8f0}
+.btnnew{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;background:linear-gradient(135deg,#f97316,#fb923c);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700}
+.btnnew:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(249,115,22,.3)}
+.jtabs{display:flex;gap:8px;margin-bottom:16px}
+.jtab{padding:8px 14px;border-radius:8px;border:1px solid #2a2a4a;background:#1a1a2e;color:#94a3b8;cursor:pointer;font-size:13px;font-weight:600}
+.jtab.active{background:#f97316;border-color:#f97316;color:#fff}
+.jtab .cnt{opacity:.75;margin-left:4px;font-weight:500}
+.jlist{display:flex;flex-direction:column;gap:10px}
+.jcard{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:14px}
+.jcard:hover{border-color:#f97316}
+.jc-thumb{width:72px;height:72px;border-radius:8px;background:#12121f;border:1px solid #2a2a4a;flex-shrink:0;object-fit:cover;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#3f3f5f;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+img.jc-thumb{padding:0}
+.jc-body{flex:1;min-width:0}
+.jc-title{font-size:15px;font-weight:700;color:#f8fafc;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.jc-id{font-size:11px;color:#64748b;font-weight:500}
+.jc-by{display:inline-block;padding:2px 8px;border-radius:4px;background:#12121f;color:#94a3b8;font-size:11px;font-weight:600;border:1px solid #2a2a4a}
+.jc-model{display:inline-block;padding:2px 8px;border-radius:4px;background:rgba(249,115,22,.1);color:#fdba74;font-size:11px;font-weight:600;border:1px solid rgba(249,115,22,.25)}
+.jc-meta{font-size:12px;color:#64748b;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.jc-meta .dot{color:#2a2a4a}
+.jc-right{display:flex;align-items:center;gap:8px}
+.jc-arrow{color:#64748b;font-size:20px}
+.jcard:hover .jc-arrow{color:#f97316}
+.jc-del{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:6px;border:1px solid transparent;background:transparent;color:#64748b;cursor:pointer;font-size:16px}
+.jc-del:hover{border-color:#f87171;color:#f87171}
+.empty{padding:40px 20px;text-align:center;color:#64748b;font-size:13px;background:#1a1a2e;border:1px dashed #2a2a4a;border-radius:10px}
+
+/* Signin error */
+.err-banner{padding:10px 14px;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.3);border-radius:8px;font-size:12px;color:#f87171;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="container" id="app"></div>
+<script>
+// === MODEL CATALOG ===
+// Maps the dropdown selection to Higgsfield MCP `generate_video` parameters.
+// The skill (higgsfield-veo-batch) reads these from the manifest and uses them verbatim.
+var MODELS=[
+  {id:'veo3_1_fast',display:'Veo 3.1 Fast',mcpModel:'veo3_1',mcpParams:{model:'veo-3-1-fast'}},
+  {id:'veo3_1_preview',display:'Veo 3.1 Preview',mcpModel:'veo3_1',mcpParams:{model:'veo-3-1-preview'}},
+  {id:'veo3_1_lite',display:'Veo 3.1 Lite',mcpModel:'veo3_1_lite',mcpParams:{}},
+  {id:'seedance_2_0',display:'Seedance 2.0',mcpModel:'seedance_2_0',mcpParams:{resolution:'720p'}},
+  {id:'kling3_0',display:'Kling 3.0',mcpModel:'kling3_0',mcpParams:{mode:'std'}}
+];
+function getModel(id){var f=null;MODELS.forEach(function(m){if(m.id===id)f=m});return f||MODELS[0]}
+
+// === STATE ===
+var APP_PASS='PFM10billion!';
+var authed=false;
+var view='signin';
+var pName='';
+var imgData=null; // base64 data URL (used for dashboard thumbnail only; the actual ref image lives in the project folder)
+var imgName='';
+var modelChoice='veo3_1_fast';
+var jsonAttrs='';
+var attrMode='json'; // 'json' | 'text'
+var statesOn=false;
+var scriptRaw='';
+var dLines=[]; // {text,isState}
+var dStates=[{name:'',swaps:{}},{name:'',swaps:{}},{name:'',swaps:{}},{name:'',swaps:{}},{name:'',swaps:{}}];
+var swKeys=[];
+var dStatesForGen=[];
+var gTab='broad',gState='',cpCard=null,cpTimeout=null;
+var showGen=false;
+var showFull=false;
+
+// Jobs / user persistence
+var uName='';
+var jobs=[];
+var curJobId=null;
+var jobsTab='my';
+var copied={};
+
+var LS_USER='hvg_user',LS_JOBS='hvg_jobs',LS_AUTH='hvg_auth';
+function lsGet(k,fb){try{var v=localStorage.getItem(k);return v==null?fb:JSON.parse(v)}catch(e){return fb}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function loadUser(){uName=lsGet(LS_USER,'')||''}
+function saveUser(){lsSet(LS_USER,uName)}
+function loadJobs(){jobs=lsGet(LS_JOBS,[])||[]}
+function saveJobs(){lsSet(LS_JOBS,jobs)}
+function loadAuth(){authed=!!lsGet(LS_AUTH,false)}
+function saveAuth(){lsSet(LS_AUTH,authed)}
+function nowISO(){return new Date().toISOString()}
+function fmtDate(iso){if(!iso)return'';var d=new Date(iso);var pad=function(n){return(n<10?'0':'')+n};return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())}
+function newJobId(){var m=0;jobs.forEach(function(j){if(j.id>m)m=j.id});return m+1}
+function pad2(n){return(n<10?'0':'')+n}
+
+// Slug helpers
+function projectSlug(){
+  var s=(pName||'').toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+  return s.substring(0,30)||'untitled';
+}
+function stateSlug(name){
+  var s=(name||'').toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+  return s;
+}
+function lineSlug(lineIdx,stateName){
+  var base=projectSlug()+'_L'+pad2(lineIdx+1);
+  if(stateName){var ss=stateSlug(stateName);if(ss)base+='_'+ss}
+  return base;
+}
+
+function snapshotJob(){
+  return{
+    pName:pName,imgData:imgData,imgName:imgName,
+    modelChoice:modelChoice,
+    jsonAttrs:jsonAttrs,attrMode:attrMode,
+    statesOn:statesOn,
+    scriptRaw:scriptRaw,
+    dLines:JSON.parse(JSON.stringify(dLines)),
+    dStates:JSON.parse(JSON.stringify(dStates))
+  };
+}
+function hydrateJob(j){
+  var d=j.data||{};
+  pName=d.pName||'';imgData=d.imgData||null;imgName=d.imgName||'';
+  modelChoice=d.modelChoice||'veo3_1_fast';
+  jsonAttrs=d.jsonAttrs||'';
+  attrMode=(d.attrMode==='text'?'text':'json'); // legacy 'build' falls back to json
+  dStates=d.dStates?JSON.parse(JSON.stringify(d.dStates)):[{name:'',swaps:{}},{name:'',swaps:{}},{name:'',swaps:{}},{name:'',swaps:{}},{name:'',swaps:{}}];
+  statesOn=d.statesOn!==undefined?!!d.statesOn:dStates.some(function(s){return(s.name||'').trim()!==''});
+  scriptRaw=d.scriptRaw||'';
+  dLines=d.dLines?JSON.parse(JSON.stringify(d.dLines)):[];
+  copied=j.copied?JSON.parse(JSON.stringify(j.copied)):{};
+}
+function resetProjectState(){
+  pName='';imgData=null;imgName='';
+  modelChoice='veo3_1_fast';
+  jsonAttrs='';attrMode='json';
+  statesOn=false;
+  scriptRaw='';dLines=[];
+  dStates=[{name:'',swaps:{}},{name:'',swaps:{}},{name:'',swaps:{}},{name:'',swaps:{}},{name:'',swaps:{}}];
+  dStatesForGen=[];copied={};curJobId=null;gTab='broad';gState='';cpCard=null;showGen=false;
+}
+function persistCurrentJob(){
+  if(curJobId==null){
+    var id=newJobId();
+    var j={id:id,name:pName||'Untitled',user:uName||'?',created:nowISO(),updated:nowISO(),data:snapshotJob(),copied:copied,promptTotal:countPrompts()};
+    jobs.push(j);curJobId=id;
+  }else{
+    var j=null;jobs.forEach(function(x){if(x.id===curJobId)j=x});
+    if(!j){var id=newJobId();j={id:id,user:uName||'?',created:nowISO()};jobs.push(j);curJobId=id}
+    j.name=pName||j.name||'Untitled';
+    j.data=snapshotJob();j.copied=copied;j.updated=nowISO();j.promptTotal=countPrompts();
+  }
+  saveJobs();
+}
+function countPrompts(){
+  var b=0,s=0;dLines.forEach(function(l){if(l.isState)s++;else b++});
+  var filled=dStates.filter(function(x){return(x.name||'').trim()!==''}).length;
+  if(statesOn&&filled>0)return b+s*filled;
+  return dLines.length;
+}
+function countCopied(){var n=0;for(var k in copied){if(copied[k])n++}return n}
+function liveSave(){if(curJobId!=null)persistCurrentJob()}
+function fmtTime(iso){if(!iso||iso===true)return'';var d=new Date(iso);var h=d.getHours(),m=d.getMinutes(),ap=h>=12?'pm':'am';h=h%12||12;return h+':'+(m<10?'0':'')+m+ap}
+function fmtStamp(iso){if(!iso||iso===true)return'';var d=new Date(iso),t=new Date();var same=d.toDateString()===t.toDateString();if(same)return'Copied '+fmtTime(iso);return'Copied '+(d.getMonth()+1)+'/'+d.getDate()+' '+fmtTime(iso)}
+
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/\x3c/g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function escRe(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
+function detectKeys(){
+  var k={};
+  dLines.forEach(function(l){
+    if(!l.isState)return;
+    var m1=l.text.match(/\{([^}]+)\}/g);if(m1)m1.forEach(function(x){k[x.slice(1,-1)]=1});
+    var m2=l.text.match(/\[([A-Z][A-Z0-9_]*)\]/g);if(m2)m2.forEach(function(x){k[x.slice(1,-1)]=1});
+  });
+  swKeys=Object.keys(k);
+}
+function swapVal(k,sd){
+  var v=sd.swaps&&sd.swaps[k];
+  if(!v&&k.toLowerCase()==='state')v=sd.name;
+  return v||'';
+}
+function fillS(t,sd){
+  var r=t;
+  swKeys.forEach(function(k){
+    var v=swapVal(k,sd);if(!v)return;
+    r=r.replace(new RegExp('\\{'+escRe(k)+'\\}|\\['+escRe(k)+'\\]','g'),v);
+  });
+  return r;
+}
+function hlS(t,sd){
+  var h=esc(t);
+  swKeys.forEach(function(k){
+    var v=swapVal(k,sd)||'{'+k+'}';
+    h=h.replace(new RegExp('\\{'+escRe(k)+'\\}|\\['+escRe(k)+'\\]','g'),'<span class="swap">'+esc(v)+'</span>');
+  });
+  return h;
+}
+
+function parseAttrs(){
+  var raw=(jsonAttrs||'').trim();
+  if(!raw)return{ok:true,empty:true,obj:null};
+  if(attrMode!=='json')return{ok:true,empty:false,obj:null};
+  try{var o=JSON.parse(raw);if(o&&typeof o==='object'&&!Array.isArray(o))return{ok:true,empty:false,obj:o};return{ok:false,err:'Root must be a JSON object.'}}
+  catch(e){return{ok:false,err:e.message}}
+}
+function escapeDial(d){return d.replace(/\\/g,'\\\\').replace(/"/g,'\\"')}
+// Strip visual markup that shouldn't make it into the prompt output.
+// Order: handle [[double]] before [single] so we don't partial-match.
+function cleanDialogue(d){
+  return (d||'')
+    .replace(/\*\*([^*]+)\*\*/g,'$1')
+    .replace(/\[\[([^\]]+)\]\]/g,'$1')
+    .replace(/\[([^\]]+)\]/g,'$1');
+}
+function findDialogueHost(o){
+  if(!o||typeof o!=='object'||Array.isArray(o))return null;
+  if('dialogue' in o)return o;
+  for(var k in o){if(Object.prototype.hasOwnProperty.call(o,k)){var f=findDialogueHost(o[k]);if(f)return f}}
+  return null;
+}
+function reorderIdFirst(p){
+  if(!p||typeof p!=='object'||Array.isArray(p))return p;
+  var ordered={};
+  if('id' in p)ordered.id=p.id;
+  if('title' in p)ordered.title=p.title;
+  for(var k in p){
+    if(k==='id'||k==='title')continue;
+    if(Object.prototype.hasOwnProperty.call(p,k))ordered[k]=p[k];
+  }
+  return ordered;
+}
+function buildP(dial,lineIdx,stateName){
+  dial=cleanDialogue(dial);
+  var slug=(typeof lineIdx==='number')?lineSlug(lineIdx,stateName):'';
+  var raw=(jsonAttrs||'').trim();
+  if(!raw){
+    return'character says ("'+escapeDial(dial)+'")';
+  }
+  if(attrMode==='text'){
+    if(raw.indexOf('{dialogue}')!==-1)return raw.replace(/\{dialogue\}/g,dial);
+    return raw+'\n\ncharacter says ("'+escapeDial(dial)+'")';
+  }
+  // JSON mode
+  var hasPlaceholder=raw.indexOf('{dialogue}')!==-1;
+  var source=raw;
+  if(hasPlaceholder){
+    var safeInner=JSON.stringify(dial).slice(1,-1);
+    source=raw.replace(/\{dialogue\}/g,safeInner);
+  }
+  var p;try{p=JSON.parse(source)}catch(e){return'character says ("'+escapeDial(dial)+'")'}
+  if(!p||typeof p!=='object'||Array.isArray(p))return'character says ("'+escapeDial(dial)+'")';
+  if(!hasPlaceholder){
+    var host=findDialogueHost(p);
+    if(host){host.dialogue=dial}
+    else if(p.audio&&typeof p.audio==='object'&&!Array.isArray(p.audio)){p.audio.dialogue=dial}
+    else{p.dialogue=dial}
+  }
+  if(slug){p.id=slug;p.title=slug;p=reorderIdFirst(p)}
+  return JSON.stringify(p,null,2);
+}
+
+function parseScript(raw){
+  var result=[];
+  var lines=raw.split('\n');
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i].trim();
+    if(!line)continue;
+    var cleaned=line.replace(/^\d+[\.\)\:\-\s]+/,'').trim();
+    if(cleaned){
+      var wasState=dLines[result.length]?dLines[result.length].isState:false;
+      var hasTokens=/\{[^}]+\}|\[\[[^\]]+\]\]|\*\*[^*]+\*\*|\[[A-Za-z][^\]]*\]/.test(cleaned);
+      result.push({text:cleaned,isState:wasState||hasTokens});
+    }
+  }
+  return result;
+}
+
+function saveF(){
+  var g=function(id){var el=document.getElementById(id);return el?el.value:''};
+  pName=g('f_pn');
+  modelChoice=g('f_model')||modelChoice;
+  jsonAttrs=g('f_json');
+  var raw=g('f_script');
+  if(raw!==scriptRaw){
+    scriptRaw=raw;
+    dLines=parseScript(raw);
+  }
+}
+
+// === RENDER SIGNIN ===
+function renderSignin(){
+  var h='<div class="welcome-wrap"><div class="welcome-card">';
+  h+='<h1>HIGGSFIELD VIDEO GENERATOR 1.0 ⚡</h1>';
+  h+='<p>Sign in to access the tool. The password is shared across the team.</p>';
+  h+='<label>Username</label>';
+  h+='<input type="text" id="f_user" placeholder="Your first name" value="'+esc(uName)+'" style="margin-bottom:12px" onkeydown="if(event.key===\'Enter\'){event.preventDefault();var p=document.getElementById(\'f_pass\');if(p)p.focus()}">';
+  h+='<label>Password</label>';
+  h+='<input type="password" id="f_pass" placeholder="••••••••••" style="margin-bottom:16px" onkeydown="if(event.key===\'Enter\'){event.preventDefault();submitSignin()}">';
+  h+='<div id="signin_err" style="display:none" class="err-banner"></div>';
+  h+='<button class="btngen" onclick="submitSignin()">Sign in</button>';
+  h+='<p style="font-size:12px;color:#64748b;margin-top:16px;margin-bottom:0">Auth is browser-scoped. Sign out clears it.</p>';
+  h+='</div></div>';
+  document.getElementById('app').innerHTML=h;
+  setTimeout(function(){
+    var el=uName?document.getElementById('f_pass'):document.getElementById('f_user');
+    if(el)el.focus();
+  },0);
+}
+function submitSignin(){
+  var u=document.getElementById('f_user');
+  var p=document.getElementById('f_pass');
+  var err=document.getElementById('signin_err');
+  var uv=u?u.value.trim():'';
+  var pv=p?p.value:'';
+  function showErr(msg){if(err){err.style.display='block';err.textContent=msg}}
+  if(!uv){showErr('Please enter a username.');return}
+  if(pv!==APP_PASS){showErr('Incorrect password.');return}
+  uName=uv;saveUser();
+  authed=true;saveAuth();
+  view='jobs';renderJobs();
+}
+function signOut(){
+  if(!confirm('Sign out?'))return;
+  authed=false;saveAuth();
+  view='signin';renderSignin();
+}
+
+// === RENDER JOBS ===
+function renderJobs(){
+  var my=jobs.filter(function(j){return(j.user||'').toLowerCase()===(uName||'').toLowerCase()});
+  var all=jobs.slice();
+  var list=jobsTab==='my'?my:all;
+  list.sort(function(a,b){return(b.updated||'').localeCompare(a.updated||'')});
+
+  var h='<div class="jh"><div class="jh-left">';
+  h+='<h1>HIGGSFIELD VIDEO GENERATOR 1.0 ⚡</h1>';
+  h+='<div class="jh-user">Signed in as <b>'+esc(uName||'?')+'</b>';
+  h+=' <button class="icon-btn" title="Edit name" onclick="editName()">✎</button>';
+  h+=' <span style="color:#2a2a4a">•</span>';
+  h+=' <button class="chip-btn" onclick="signOut()">↪ Sign out</button>';
+  h+='</div></div>';
+  h+='<button class="btnnew" onclick="newJob()">+ New job</button></div>';
+
+  h+='<div class="jtabs">';
+  h+='<button class="jtab'+(jobsTab==='my'?' active':'')+'" onclick="setJT(\'my\')">My jobs <span class="cnt">('+my.length+')</span></button>';
+  h+='<button class="jtab'+(jobsTab==='all'?' active':'')+'" onclick="setJT(\'all\')">All jobs <span class="cnt">('+all.length+')</span></button>';
+  h+='</div>';
+
+  if(list.length===0){
+    h+='<div class="empty">'+(jobsTab==='my'?'No jobs yet. Click <b>+ New job</b> to start one.':'No jobs saved in this browser yet.')+'</div>';
+  }else{
+    h+='<div class="jlist">';
+    list.forEach(function(j){
+      var total=j.promptTotal||0;var cp=0;if(j.copied){for(var k in j.copied){if(j.copied[k])cp++}}
+      var img=j.data&&j.data.imgData;
+      var modelId=(j.data&&j.data.modelChoice)||'veo3_1_fast';
+      var m=getModel(modelId);
+      h+='<div class="jcard" onclick="openJob('+j.id+')">';
+      h+=img?'<img class="jc-thumb" src="'+img+'" alt="">':'<div class="jc-thumb">no image</div>';
+      h+='<div class="jc-body"><div class="jc-title">'+esc(j.name||'Untitled')+' <span class="jc-id">#'+j.id+'</span> <span class="jc-by">by '+esc(j.user||'?')+'</span> <span class="jc-model">'+esc(m.display)+'</span></div>';
+      h+='<div class="jc-meta">'+total+' prompts <span class="dot">·</span> '+cp+'/'+total+' copied <span class="dot">·</span> updated '+esc(fmtDate(j.updated))+'</div></div>';
+      h+='<div class="jc-right"><button class="jc-del" title="Delete job" onclick="event.stopPropagation();delJob('+j.id+')">×</button><span class="jc-arrow">→</span></div>';
+      h+='</div>';
+    });
+    h+='</div>';
+  }
+  h+='<div style="margin-top:32px;text-align:center;font-size:12px;color:#64748b">Local-first · saved in this browser’s storage</div>';
+  document.getElementById('app').innerHTML=h;
+}
+function setJT(t){jobsTab=t;renderJobs()}
+function editName(){
+  var v=prompt('Your name:',uName||'');
+  if(v!=null&&v.trim()){uName=v.trim();saveUser();renderJobs()}
+}
+function newJob(){resetProjectState();view='setup';renderSetup();window.scrollTo(0,0)}
+function openJob(id){
+  var j=null;jobs.forEach(function(x){if(x.id===id)j=x});if(!j)return;
+  hydrateJob(j);curJobId=id;detectKeys();
+  dStatesForGen=dStates.filter(function(x){return(x.name||'').trim()!==''});
+  showGen=dLines.length>0;gTab='broad';gState='';
+  view='setup';renderSetup();window.scrollTo(0,0);
+}
+function delJob(id){
+  if(!confirm('Delete this job? This cannot be undone.'))return;
+  jobs=jobs.filter(function(j){return j.id!==id});
+  if(curJobId===id)curJobId=null;
+  saveJobs();renderJobs();
+}
+function backToJobs(){view='jobs';renderJobs();window.scrollTo(0,0)}
+
+// === RENDER SETUP ===
+function renderSetup(){
+  var h='<div class="gh"><div><h1>HIGGSFIELD VIDEO GENERATOR 1.0 ⚡</h1><p class="sub" style="margin-bottom:0">Set up your project, generate prompts, hand off to Claude to drive Higgsfield.</p></div>';
+  h+='<button class="btnback" onclick="backToJobs()">← Jobs</button></div>';
+
+  // Section 1: Project + Model + Reference Image
+  h+='<div class="sec"><h2><span class="sn">1</span>Project</h2>';
+  h+='<label>Project Name</label><input type="text" id="f_pn" value="'+esc(pName)+'" placeholder="e.g. Repossessed Podcast Florida" oninput="pName=this.value;liveSave()">';
+  h+='<label>Project Model <span style="color:#64748b;font-weight:400;text-transform:none;letter-spacing:0">(which Higgsfield model Claude will fire)</span></label>';
+  h+='<select id="f_model" onchange="modelChoice=this.value;liveSave()">';
+  MODELS.forEach(function(m){
+    h+='<option value="'+esc(m.id)+'"'+(modelChoice===m.id?' selected':'')+'>'+esc(m.display)+'</option>';
+  });
+  h+='</select>';
+  h+='<label>Reference Image <span style="color:#64748b;font-weight:400;text-transform:none;letter-spacing:0">(dashboard thumbnail — also save this image into your project folder for Claude)</span></label>';
+  h+='<div id="dropzone" class="upload-zone'+(imgData?' has-img':'')+'" onclick="document.getElementById(\'f_img\').click()" ondragover="dzOver(event)" ondragleave="dzLeave(event)" ondrop="dzDrop(event)">';
+  if(imgData){
+    h+='<img src="'+imgData+'" alt="Reference"><p>'+esc(imgName)+' — click or drop to replace</p>';
+  }else{
+    h+='<p class="up-label">Click or drop image to upload</p><p>PNG, JPG, or WEBP</p>';
+  }
+  h+='</div>';
+  h+='<input type="file" id="f_img" accept="image/*" style="display:none" onchange="handleImg(this)">';
+  h+='</div>';
+
+  // Section 2: Master Prompt (JSON / Text)
+  var attrCheck=parseAttrs();
+  h+='<div class="sec"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px;flex-wrap:wrap"><h2 style="margin-bottom:0"><span class="sn">2</span>Master Prompt</h2>';
+  h+='<div class="mode-toggle">';
+  h+='<button class="mtab'+(attrMode==='json'?' active':'')+'" onclick="setMode(\'json\')">JSON</button>';
+  h+='<button class="mtab'+(attrMode==='text'?' active':'')+'" onclick="setMode(\'text\')">Text</button>';
+  h+='</div></div>';
+
+  if(attrMode==='json'){
+    h+='<div class="hint">Paste your master JSON. Dialogue fills the first <code>dialogue</code> key found (e.g. <code>audio.dialogue</code>). The <code>id</code> and <code>title</code> keys are auto-injected per line as <code>'+esc(projectSlug())+'_L01</code>, <code>_L02</code>, etc. — any existing values are overwritten.</div>';
+    h+='<textarea id="f_json" placeholder=\'{\\n  "voice_lock": { ... },\\n  "camera": { "movement": "locked" },\\n  "audio": { "dialogue": "" }\\n}\' style="min-height:160px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px" oninput="onAttrs(this.value)">'+esc(jsonAttrs)+'</textarea>';
+    if(jsonAttrs.trim()&&!attrCheck.ok){
+      h+='<div style="padding:10px 14px;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.3);border-radius:8px;font-size:12px;color:#f87171;margin-top:-8px">Invalid JSON: '+esc(attrCheck.err||'')+'</div>';
+    }else if(jsonAttrs.trim()&&attrCheck.ok){
+      h+='<div style="padding:10px 14px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:8px;font-size:12px;color:#22c55e;margin-top:-8px">✓ Valid JSON</div>';
+    }
+  }else{
+    h+='<div class="hint">Write your prompt as plain text. Use <code>{dialogue}</code> anywhere to drop the line in-place — otherwise <code>character says ("dialogue")</code> gets appended at the end. Note: text mode does NOT include <code>id</code>/<code>title</code> auto-naming — JSON mode does.</div>';
+    h+='<textarea id="f_json" placeholder="e.g. A cinematic wide shot of a woman in a diner. She looks at the camera and {dialogue}" style="min-height:160px;line-height:1.5" oninput="onAttrs(this.value)">'+esc(jsonAttrs)+'</textarea>';
+  }
+  h+='</div>';
+
+  // Section 3: Script
+  h+='<div class="sec"><h2><span class="sn">3</span>Script</h2>';
+  h+='<div class="hint">Paste your full numbered script. Each numbered line becomes one prompt. Click <b>BROAD</b> on any line to mark it state-specific. Use <code>{state}</code>/<code>{city}</code> or <code>[STATE]</code>/<code>[CITY]</code> (uppercase) as swap placeholders.</div>';
+  h+='<textarea id="f_script" placeholder="1. So I was out on a walk with my wife...\n2. And the couple is freaking out...\n3. I see this happening and I don\'t hesitate..." style="min-height:140px" oninput="previewScript(this.value)">'+esc(scriptRaw)+'</textarea>';
+
+  if(dLines.length>0){
+    h+='<div style="font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">'+dLines.length+' lines detected</div>';
+    h+='<div class="parsed-lines">';
+    for(var i=0;i<dLines.length;i++){
+      h+='<div class="pl">';
+      h+='<span class="pl-n">'+(i+1)+'</span>';
+      h+='<span class="pl-t">'+esc(dLines[i].text)+'</span>';
+      h+='<span class="pl-tag'+(dLines[i].isState?' st':'')+'" onclick="togLine('+i+')">'+(dLines[i].isState?'STATE':'BROAD')+'</span>';
+      h+='</div>';
+    }
+    h+='</div>';
+  }
+  h+='</div>';
+
+  // Section 4: States
+  detectKeys();
+  h+='<div class="sec"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px;flex-wrap:wrap"><h2 style="margin-bottom:0"><span class="sn">4</span>States <span style="font-size:12px;color:#64748b;font-weight:400">(optional)</span></h2>';
+  h+='<div class="mode-toggle"><button class="mtab'+(!statesOn?' active':'')+'" onclick="setStates(false)">Off</button><button class="mtab'+(statesOn?' active':'')+'" onclick="setStates(true)">On</button></div></div>';
+  if(statesOn){
+    h+='<div class="hint">Add states to target. STATE lines with <code>{tokens}</code> or <code>[UPPERCASE]</code> placeholders get swap fields under each state.</div>';
+    for(var i=0;i<dStates.length;i++){
+      h+='<div style="background:#12121f;border:1px solid #2a2a4a;border-radius:8px;padding:12px;margin-bottom:10px">';
+      h+='<div class="sr"><input type="text" id="sn_'+i+'" value="'+esc(dStates[i].name)+'" placeholder="State '+(i+1)+'" style="font-weight:600" onchange="updSN('+i+',this.value)">';
+      h+='<button class="rl" onclick="rmSt('+i+')">&times;</button></div>';
+      for(var j=0;j<swKeys.length;j++){
+        var k=swKeys[j];
+        if(k.toLowerCase()==='state')continue;
+        h+='<div style="display:flex;align-items:center;gap:8px;margin-top:6px">';
+        h+='<span class="sk">{'+esc(k)+'}</span>';
+        h+='<input type="text" id="ss_'+i+'_'+k+'" value="'+esc(dStates[i].swaps[k]||'')+'" placeholder="'+esc(k)+' value" style="margin-bottom:0;flex:1;font-size:13px" onchange="updSS('+i+',\''+k+'\',this.value)">';
+        h+='</div>';
+      }
+      h+='</div>';
+    }
+    h+='<button class="btn2" style="margin-top:10px" onclick="addSt()">+ Add State</button>';
+  }else{
+    h+='<div class="hint">Leave off if your script has state values baked in. Turn on to generate variations of each STATE-tagged line across multiple states.</div>';
+  }
+  h+='</div>';
+
+  h+='<button class="btngen" onclick="doGen()">'+(showGen?'Re-generate Prompts':'Generate Prompts')+'</button>';
+  if(showGen)h+=buildGen();
+  document.getElementById('app').innerHTML=h;
+}
+
+// === BUILD GEN ===
+function buildGen(){
+  detectKeys();
+  var bLines=[],sLines=[];
+  dLines.forEach(function(l){if(l.isState)sLines.push(l);else bLines.push(l)});
+  var sts=dStatesForGen;
+  var hasMult=statesOn&&sLines.length>0&&sts.length>0;
+  var tB=bLines.length;
+  if(!gState&&sts.length>0)gState=sts[0].name;
+  var cSt=null;sts.forEach(function(s){if(s.name===gState)cSt=s});
+  var total=hasMult?(tB+sLines.length*sts.length):dLines.length;
+  var cp=countCopied();
+
+  var h='<div id="gen-section" style="margin-top:40px;padding-top:28px;border-top:1px solid #2a2a4a">';
+  h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:20px;flex-wrap:wrap">';
+  h+='<div><h2 style="margin-bottom:6px">Prompts</h2>';
+  h+='<p style="font-size:13px;color:#94a3b8"><span class="accent">';
+  h+=hasMult?(tB+' broad + '+(sLines.length*sts.length)+' state = '+total+' total'):(total+' prompt'+(total===1?'':'s'));
+  h+='</span> <span style="color:#64748b">· '+cp+'/'+total+' copied</span></p></div>';
+  h+='<button class="prev-toggle'+(showFull?' on':'')+'" onclick="toggleFull()">'+(showFull?'▼ Hide full prompt':'▶ Show full prompt')+'</button>';
+  h+='</div>';
+
+  if(hasMult){
+    h+='<div class="tabs"><button class="tab'+(gTab==='broad'?' active':'')+'" onclick="setGT(\'broad\')">Batch 1: Broad ('+tB+')</button>';
+    h+='<button class="tab'+(gTab==='state'?' active':'')+'" onclick="setGT(\'state\')">Batch 2: State ('+sLines.length+' x '+sts.length+')</button></div>';
+    if(gTab==='state'){
+      h+='<div class="pills">';
+      sts.forEach(function(s){h+='<button class="pill'+(gState===s.name?' active':'')+'" onclick="setGS(\''+esc(s.name)+'\')">'+esc(s.name)+'</button>'});
+      h+='</div>';
+    }
+  }
+
+  h+='<div class="cards">';
+  if(!hasMult){
+    dLines.forEach(function(l,i){
+      var ln=i+1;var cid='broad_L'+ln;var ic=cpCard===cid;var ts=copied[cid];var done=!!ts;
+      var lbl=l.isState?'State':'Broad';
+      h+='<div class="card'+(ic?' cp':'')+(done&&!ic?' done':'')+'" onclick="cpC(\''+cid+'\')">';
+      h+='<div class="ch"><span class="cl">'+lbl+' — L'+ln+'</span><span class="cs">'+(ic?'Copied!':(done?'✓ Copied · click to re-copy':'Click to copy'))+'</span></div>';
+      h+='<div class="ct">'+esc(l.text)+'</div>';
+      if(done&&!ic)h+='<div class="cts">'+esc(fmtStamp(ts))+'</div>';
+      if(showFull)h+='<div class="cfull" onclick="event.stopPropagation()">'+esc(buildP(l.text,i,null))+'</div>';
+      h+='</div>';
+    });
+  }else if(gTab==='broad'){
+    bLines.forEach(function(bl){
+      var i=dLines.indexOf(bl);var ln=i+1;var cid='broad_L'+ln;var ic=cpCard===cid;var ts=copied[cid];var done=!!ts;
+      h+='<div class="card'+(ic?' cp':'')+(done&&!ic?' done':'')+'" onclick="cpC(\''+cid+'\')">';
+      h+='<div class="ch"><span class="cl">Broad — L'+ln+'</span><span class="cs">'+(ic?'Copied!':(done?'✓ Copied · click to re-copy':'Click to copy'))+'</span></div>';
+      h+='<div class="ct">'+esc(bl.text)+'</div>';
+      if(done&&!ic)h+='<div class="cts">'+esc(fmtStamp(ts))+'</div>';
+      if(showFull)h+='<div class="cfull" onclick="event.stopPropagation()">'+esc(buildP(bl.text,i,null))+'</div>';
+      h+='</div>';
+    });
+  }else if(cSt){
+    sLines.forEach(function(sl){
+      var i=dLines.indexOf(sl);var ln=i+1;var cid=gState+'_L'+ln;var ic=cpCard===cid;var ts=copied[cid];var done=!!ts;
+      h+='<div class="card'+(ic?' cp':'')+(done&&!ic?' done':'')+'" onclick="cpC(\''+cid+'\')">';
+      h+='<div class="ch"><span class="cl">'+esc(gState)+' — L'+ln+'</span><span class="cs">'+(ic?'Copied!':(done?'✓ Copied · click to re-copy':'Click to copy'))+'</span></div>';
+      h+='<div class="ct">'+hlS(sl.text,cSt)+'</div>';
+      if(done&&!ic)h+='<div class="cts">'+esc(fmtStamp(ts))+'</div>';
+      if(showFull)h+='<div class="cfull" onclick="event.stopPropagation()">'+esc(buildP(fillS(sl.text,cSt),i,gState))+'</div>';
+      h+='</div>';
+    });
+  }
+  h+='</div>';
+
+  // === HAND OFF TO CLAUDE ===
+  h+='<div style="margin-top:36px;padding-top:24px;border-top:1px solid #2a2a4a">';
+  h+='<h2 style="margin-bottom:8px">Hand off to Claude</h2>';
+  h+='<p style="font-size:13px;color:#94a3b8;margin-bottom:14px">Download a small .md file with the manifest. Drop it in your project folder, drag into Claude — Claude runs the Higgsfield generations and saves clips to your project\'s <code>Footage/Veo/</code> folder.</p>';
+  var disabled=(!imgData||!pName||dLines.length===0);
+  if(disabled){
+    var miss=[];
+    if(!pName)miss.push('Project name');
+    if(!imgData)miss.push('Reference image');
+    if(dLines.length===0)miss.push('Script');
+    h+='<p style="font-size:12px;color:#f87171;margin-bottom:10px">Missing: '+miss.join(', ')+'</p>';
+  }
+  h+='<button class="btnclaude" onclick="downloadHandoff()"'+(disabled?' disabled':'')+'>⬇ Download for Claude</button>';
+  h+='</div>';
+
+  h+='</div>';
+  return h;
+}
+function toggleFull(){showFull=!showFull;updateGen()}
+function setStates(on){if(statesOn===on)return;saveF();statesOn=on;if(on){detectKeys()}renderSetup()}
+function updateGen(){
+  var el=document.getElementById('gen-section');
+  if(!el)return renderSetup();
+  el.outerHTML=buildGen();
+}
+
+// === ACTIONS ===
+function handleImg(input){
+  if(input.files&&input.files[0])readImageFile(input.files[0]);
+}
+function readImageFile(f){
+  if(!f||!/^image\//.test(f.type)){alert('That file is not an image.');return}
+  imgName=f.name;
+  var reader=new FileReader();
+  reader.onload=function(ev){imgData=ev.target.result;saveF();renderSetup()};
+  reader.readAsDataURL(f);
+}
+function dzOver(e){e.preventDefault();e.stopPropagation();var z=document.getElementById('dropzone');if(z)z.classList.add('drag')}
+function dzLeave(e){e.preventDefault();e.stopPropagation();var z=document.getElementById('dropzone');if(z)z.classList.remove('drag')}
+function dzDrop(e){
+  e.preventDefault();e.stopPropagation();
+  var z=document.getElementById('dropzone');if(z)z.classList.remove('drag');
+  var dt=e.dataTransfer;if(!dt)return;
+  if(dt.files&&dt.files.length)readImageFile(dt.files[0]);
+}
+function previewScript(val){
+  scriptRaw=val;
+  dLines=parseScript(val);
+  liveSave();
+  var el=document.getElementById('f_script');
+  var pos=el?el.selectionStart:0;
+  renderSetup();
+  var el2=document.getElementById('f_script');
+  if(el2){el2.focus();el2.selectionStart=el2.selectionEnd=pos}
+}
+function onAttrs(v){
+  jsonAttrs=v;liveSave();
+  var el=document.querySelector('#f_json');if(!el)return;
+  var next=el.nextElementSibling;
+  if(next&&(next.textContent.indexOf('Invalid JSON')===0||next.textContent.indexOf('✓ Valid JSON')===0))next.remove();
+  if(attrMode!=='json')return;
+  var t=jsonAttrs.trim();if(!t)return;
+  var r=parseAttrs();
+  var banner=document.createElement('div');
+  if(!r.ok){banner.style.cssText='padding:10px 14px;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.3);border-radius:8px;font-size:12px;color:#f87171;margin-top:-8px;margin-bottom:16px';banner.textContent='Invalid JSON: '+(r.err||'');}
+  else{banner.style.cssText='padding:10px 14px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:8px;font-size:12px;color:#22c55e;margin-top:-8px;margin-bottom:16px';banner.textContent='✓ Valid JSON';}
+  el.insertAdjacentElement('afterend',banner);
+}
+function setMode(m){if(attrMode===m)return;saveF();attrMode=m;renderSetup()}
+function togLine(i){dLines[i].isState=!dLines[i].isState;detectKeys();liveSave();renderSetup()}
+function addSt(){var s={name:'',swaps:{}};swKeys.forEach(function(k){s.swaps[k]=''});dStates.push(s);liveSave();renderSetup()}
+function rmSt(i){dStates.splice(i,1);liveSave();renderSetup()}
+function updSN(i,v){dStates[i].name=v;liveSave()}
+function updSS(i,k,v){if(!dStates[i].swaps)dStates[i].swaps={};dStates[i].swaps[k]=v;liveSave()}
+
+function doGen(){
+  saveF();detectKeys();
+  for(var i=0;i<dStates.length;i++){var el=document.getElementById('sn_'+i);if(el)dStates[i].name=el.value}
+  for(var i=0;i<dStates.length;i++){if(!dStates[i].swaps)dStates[i].swaps={};for(var j=0;j<swKeys.length;j++){var k=swKeys[j];var el=document.getElementById('ss_'+i+'_'+k);if(el)dStates[i].swaps[k]=el.value}}
+  var filled=dStates.filter(function(s){return s.name.trim()!==''});
+  dStatesForGen=filled;
+  showGen=true;gTab='broad';cpCard=null;
+  persistCurrentJob();
+  renderSetup();
+  var el=document.getElementById('gen-section');
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function setGT(t){gTab=t;cpCard=null;updateGen()}
+function setGS(n){gState=n;cpCard=null;updateGen()}
+
+function cpC(cid){
+  var dial,lineIdx,stName=null;
+  if(cid.indexOf('broad_')===0){
+    var ln=parseInt(cid.split('L')[1]);
+    lineIdx=ln-1;
+    dial=dLines[lineIdx].text;
+  }else{
+    var ui=cid.lastIndexOf('_L');
+    var sn=cid.substring(0,ui);
+    var ln=parseInt(cid.substring(ui+2));
+    lineIdx=ln-1;stName=sn;
+    var sd=null;dStates.forEach(function(s){if(s.name===sn)sd=s});
+    dial=fillS(dLines[lineIdx].text,sd);
+  }
+  var json=buildP(dial,lineIdx,stName);
+  navigator.clipboard.writeText(json).then(function(){
+    if(cpTimeout){clearTimeout(cpTimeout);cpTimeout=null}
+    cpCard=cid;copied[cid]=nowISO();persistCurrentJob();updateGen();
+    cpTimeout=setTimeout(function(){cpCard=null;cpTimeout=null;updateGen()},1500);
+  });
+}
+
+// === MANIFEST + HANDOFF DOC ===
+function buildManifest(){
+  var slug=projectSlug();
+  var bLines=[],sLines=[];
+  dLines.forEach(function(l){if(l.isState)sLines.push(l);else bLines.push(l)});
+  var sts=dStatesForGen;
+  var hasMult=statesOn&&sLines.length>0&&sts.length>0;
+  var prompts=[];
+  function addEntry(lineIdx,stName,dial,isState){
+    var s=lineSlug(lineIdx,stName);
+    prompts.push({
+      lineIdx:lineIdx,
+      lineNum:lineIdx+1,
+      slug:s,
+      isState:!!isState,
+      stateName:stName||null,
+      dialogue:dial,
+      fullPrompt:buildP(dial,lineIdx,stName)
+    });
+  }
+  if(!hasMult){
+    dLines.forEach(function(l,i){addEntry(i,null,cleanDialogue(l.text),l.isState)});
+  }else{
+    bLines.forEach(function(bl){
+      var i=dLines.indexOf(bl);
+      addEntry(i,null,cleanDialogue(bl.text),false);
+    });
+    sLines.forEach(function(sl){
+      var i=dLines.indexOf(sl);
+      sts.forEach(function(s){
+        var dial=cleanDialogue(fillS(sl.text,s));
+        addEntry(i,s.name,dial,true);
+      });
+    });
+  }
+  var m=getModel(modelChoice);
+  return{
+    project:{
+      name:pName||'Untitled',
+      slug:slug,
+      imgName:imgName||'',
+      createdAt:nowISO(),
+      user:uName||''
+    },
+    generation:{
+      modelChoice:m.id,
+      modelDisplay:m.display,
+      mcpModel:m.mcpModel,
+      mcpParams:m.mcpParams,
+      duration:8,
+      aspectRatio:'16:9',
+      countPerPrompt:2
+    },
+    prompts:prompts
+  };
+}
+
+function downloadHandoff(){
+  saveF();
+  if(!showGen||dLines.length===0){alert('Generate prompts first.');return}
+  var m=buildManifest();
+  var slug=m.project.slug;
+  var md='';
+  md+='# Higgsfield Veo project handoff: '+(pName||'Untitled')+'\n\n';
+  md+='_Generated by HVG.1 on '+nowISO()+' by '+(uName||'?')+'_\n\n';
+  md+='## Project metadata\n';
+  md+='- **Project name:** '+(pName||'Untitled')+'\n';
+  md+='- **Project slug:** `'+slug+'`\n';
+  md+='- **Model:** '+m.generation.modelDisplay+' (`'+m.generation.mcpModel+'`)\n';
+  md+='- **Reference image:** `'+(imgName||'(none)')+'` — must be saved in same folder as this `.md`\n';
+  md+='- **Total prompts:** '+m.prompts.length+'\n';
+  md+='- **Generation:** '+m.generation.aspectRatio+' · '+m.generation.duration+'s · count='+m.generation.countPerPrompt+' per line\n\n';
+
+  md+='## Manifest\n';
+  md+='Canonical input for the `higgsfield-veo-batch` skill.\n\n';
+  md+='```json\n'+JSON.stringify(m,null,2)+'\n```\n\n';
+
+  md+='## What I need you to do\n';
+  md+='1. Trigger the **`higgsfield-veo-batch`** skill with this `.md` as input.\n';
+  md+='2. The skill will:\n';
+  md+='   - Look for the reference image (`'+(imgName||'reference.png')+'`) in the same folder as this `.md`\n';
+  md+='   - Upload it to Higgsfield via `media_upload` + `media_confirm`\n';
+  md+='   - Fire `generate_video` for each manifest entry using model `'+m.generation.mcpModel+'` with params `'+JSON.stringify(m.generation.mcpParams)+'`, count='+m.generation.countPerPrompt+', duration='+m.generation.duration+'s, aspect='+m.generation.aspectRatio+'\n';
+  md+='   - Poll all jobs via `job_display`\n';
+  md+='   - Download each result to `<project>/Elements/Footage/Veo/<slug>_v01.mp4` (and `_v02.mp4` for the second variation)\n';
+  md+='3. Report final credit delta and any failures when complete.\n\n';
+  md+='_Generated by HVG.1. The manifest above is the source of truth — trust it over the prompt text in this preamble._\n';
+
+  var blob=new Blob([md],{type:'text/markdown'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download=slug+'_handoff.md';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(url)},1000);
+}
+
+window.addEventListener('dragover',function(e){e.preventDefault()});
+window.addEventListener('drop',function(e){e.preventDefault()});
+
+// === INIT ===
+loadAuth();loadUser();loadJobs();
+if(!authed){view='signin';renderSignin()}
+else{view='jobs';renderJobs()}
+</script>
+</body>
+</html>
