@@ -138,10 +138,13 @@ img.jc-thumb{padding:0}
 // The skill (higgsfield-veo-batch) reads these from the manifest and merges
 // mcpParams into the call. CRITICAL: never put a `model` key inside mcpParams
 // — it conflicts with the top-level family ID and silently breaks the call.
-// Use `quality` to encode Veo variant (basic = fast, high/ultra = preview-tier).
+//
+// IMPORTANT — Veo 3.1 model selection via MCP:
+// - `veo3_1_lite` accepts `medias` (frame-to-video). USE THIS for our workflow.
+// - `veo3_1` (the non-Lite "Fast" / "Preview") rejects `medias` for frame-to-video
+//   despite what its schema says. Only works for text-to-video. NOT included in
+//   the dropdown because every PFM project requires a start frame.
 var MODELS=[
-  {id:'veo3_1_fast',display:'Veo 3.1 Fast',mcpModel:'veo3_1',mcpParams:{}},
-  {id:'veo3_1_preview',display:'Veo 3.1 Preview',mcpModel:'veo3_1',mcpParams:{quality:'high'}},
   {id:'veo3_1_lite',display:'Veo 3.1 Lite',mcpModel:'veo3_1_lite',mcpParams:{}},
   {id:'seedance_2_0',display:'Seedance 2.0',mcpModel:'seedance_2_0',mcpParams:{resolution:'720p'}},
   {id:'kling3_0',display:'Kling 3.0',mcpModel:'kling3_0',mcpParams:{mode:'std'}}
@@ -155,7 +158,7 @@ var view='signin';
 var pName='';
 var imgData=null; // base64 data URL (used for dashboard thumbnail only; the actual ref image lives in the project folder)
 var imgName='';
-var modelChoice='veo3_1_fast';
+var modelChoice='veo3_1_lite';
 var jsonAttrs='';
 var attrMode='json'; // 'json' | 'text'
 var statesOn=false;
@@ -218,7 +221,7 @@ function snapshotJob(){
 function hydrateJob(j){
   var d=j.data||{};
   pName=d.pName||'';imgData=d.imgData||null;imgName=d.imgName||'';
-  modelChoice=d.modelChoice||'veo3_1_fast';
+  modelChoice=d.modelChoice||'veo3_1_lite';
   jsonAttrs=d.jsonAttrs||'';
   attrMode=(d.attrMode==='text'?'text':'json'); // legacy 'build' falls back to json
   dStates=d.dStates?JSON.parse(JSON.stringify(d.dStates)):[{name:'',swaps:{}},{name:'',swaps:{}},{name:'',swaps:{}},{name:'',swaps:{}},{name:'',swaps:{}}];
@@ -229,7 +232,7 @@ function hydrateJob(j){
 }
 function resetProjectState(){
   pName='';imgData=null;imgName='';
-  modelChoice='veo3_1_fast';
+  modelChoice='veo3_1_lite';
   jsonAttrs='';attrMode='json';
   statesOn=false;
   scriptRaw='';dLines=[];
@@ -450,7 +453,7 @@ function renderJobs(){
     list.forEach(function(j){
       var total=j.promptTotal||0;var cp=0;if(j.copied){for(var k in j.copied){if(j.copied[k])cp++}}
       var img=j.data&&j.data.imgData;
-      var modelId=(j.data&&j.data.modelChoice)||'veo3_1_fast';
+      var modelId=(j.data&&j.data.modelChoice)||'veo3_1_lite';
       var m=getModel(modelId);
       h+='<div class="jcard" onclick="openJob('+j.id+')">';
       h+=img?'<img class="jc-thumb" src="'+img+'" alt="">':'<div class="jc-thumb">no image</div>';
